@@ -1,0 +1,115 @@
+CREATE DATABASE NHLTILASTOT;
+
+
+CREATE TABLE Kotijoukkue
+(
+  Kotijoukkue INT NOT NULL,
+  PRIMARY KEY (Kotijoukkue)
+);
+
+CREATE TABLE Kapteeni
+(
+  Kapteenin_Nimi INT NOT NULL,
+  PRIMARY KEY (Kapteenin_Nimi)
+);
+
+CREATE TABLE Vierasjoukkue
+(
+  Vierasjoukkue INT NOT NULL,
+  PRIMARY KEY (Vierasjoukkue)
+);
+
+CREATE TABLE Joukkue
+(
+  JoukkueID INT NOT NULL,
+  Nimi INT NOT NULL,
+  Kaupunki INT NOT NULL,
+  Valmentaja INT NOT NULL,
+  PeliID INT NOT NULL,
+  Kapteenin_Nimi INT NOT NULL,
+  PRIMARY KEY (JoukkueID),
+  FOREIGN KEY (PeliID) REFERENCES Peli(PeliID),
+  FOREIGN KEY (Kapteenin_Nimi) REFERENCES Kapteeni(Kapteenin_Nimi)
+);
+
+CREATE TABLE Peli
+(
+  PeliID INT NOT NULL,
+  Koti_joukkueen_Maalit INT NOT NULL,
+  Vieras_Joukkueen_Maalit INT NOT NULL,
+  Pelipäivä INT NOT NULL,
+  JoukkueID INT NOT NULL,
+  Kotijoukkue INT NOT NULL,
+  Vierasjoukkue INT NOT NULL,
+  PRIMARY KEY (PeliID),
+  FOREIGN KEY (JoukkueID) REFERENCES Joukkue(JoukkueID),
+  FOREIGN KEY (Kotijoukkue) REFERENCES Kotijoukkue(Kotijoukkue),
+  FOREIGN KEY (Vierasjoukkue) REFERENCES Vierasjoukkue(Vierasjoukkue)
+);
+
+CREATE TABLE Pelaaja
+(
+  PelaajaID INT NOT NULL,
+  Pelaajan_Nimi INT NOT NULL,
+  Pelipaikka INT NOT NULL,
+  Kätisyys INT NOT NULL,
+  JoukkueID INT NOT NULL,
+  PRIMARY KEY (PelaajaID),
+  FOREIGN KEY (JoukkueID) REFERENCES Joukkue(JoukkueID)
+);
+
+CREATE TABLE Loukkaantumis_Tilanne
+(
+  LoukkaantumisID INT NOT NULL,
+  Syy INT NOT NULL,
+  Kesto INT NOT NULL,
+  PelaajaID INT NOT NULL,
+  PRIMARY KEY (LoukkaantumisID),
+  FOREIGN KEY (PelaajaID) REFERENCES Pelaaja(PelaajaID)
+);
+
+// Tietueen haku
+
+let sql = 'SELECT * FROM pelaaja';
+let query = db.que(parameter) err: IERROR> {
+if (err) throw err;
+console.log(results);
+
+  });
+});
+
+//Tietueen lisäys
+
+let post = {title:'Kotivoitto', body: 'Kotivoitot'};
+let sql = 'INSERT INTO Kotivoitot SET ?';
+let query = db.query(sql, post, (err, result) => {
+  if (err) throw err;
+  console.log(result);
+  res.send('Tietue lisätty')
+  
+  });
+});
+
+// Tietueen päivitys
+
+let NewTitle = 'Päivitetty otsikko';
+let sql = ´UPDATE posts SET title = '${NewTitle}' WHERE id =${req.params.id}´;
+let query = db.query(sql,(err, result) => {
+  if (err) throw err;
+  console.log(result);
+  res.send('Tietue Päivitetty')
+  
+  });
+});
+
+// Tietueen poistaminen
+
+let NewTitle = 'Päivitetty otsikko';
+let sql = ´DELETE FROM posts WHERE id =${req.params.id}´;
+let query = db.query(sql,(err, result) => {
+  if (err) throw err;
+  console.log(result);
+  res.send('Tietue poistettu')
+  
+    });
+});
